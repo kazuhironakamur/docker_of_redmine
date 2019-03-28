@@ -1,0 +1,34 @@
+version: "2"
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - LANG=C.UTF-8
+      - LANGUAGE=en_US
+      - REDMINE_DB_MYSQL=db
+      - REDMINE_DB_PASSWORD=<input_your_password>
+    ports:
+      - 8080:3000
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=<input_your_password>
+      - MYSQL_DATABASE=redmine
+      - LANG=C.UTF-8
+      - LANGUAGE=en_US
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  db:
+    driver: local
